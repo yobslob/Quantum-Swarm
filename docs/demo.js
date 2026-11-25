@@ -123,7 +123,7 @@
   }
 
   // ---------- drawing ----------
-  const RAMP = ["#f7fbff", "#e3effd", "#cce3fd", "#b6d5f8", "#9dc8f7", "#84b9f3", "#6aabf1", "#519ced", "#2370cd"]
+  const RAMP = ["#ffffff", "#f0f5fc", "#e1ebf8", "#d0e0f3", "#bcd2ec", "#a6c2e4", "#8eb0da"]
     .map(h => [1, 3, 5].map(k => parseInt(h.slice(k, k + 2), 16)));
   function rampColor(v) {
     const x = Math.max(0, Math.min(1, v)) * (RAMP.length - 1), i = Math.min(RAMP.length - 2, Math.floor(x)), f = x - i;
@@ -154,32 +154,16 @@
     const ctx = canvas.getContext("2d"), W = canvas.width, fn = S.fn;
     ctx.drawImage(background(S.fname, W), 0, 0);
     const tx = v => (v - fn.lo) / (fn.hi - fn.lo) * W, ty = v => W - (v - fn.lo) / (fn.hi - fn.lo) * W;
-    // optimum
-    ctx.font = "bold 30px Inter, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.lineWidth = 3; ctx.strokeStyle = "#ffffff"; ctx.strokeText("★", tx(fn.opt[0]), ty(fn.opt[1]));
-    ctx.fillStyle = "#191919"; ctx.fillText("★", tx(fn.opt[0]), ty(fn.opt[1]));
     // particles
-    S.X.forEach((x, i) => {
-      const cx = tx(x[0]), cy = ty(x[1]);
-      if (S.boosted.has(i)) {
-        ctx.beginPath(); ctx.arc(cx, cy, 11, 0, 2 * Math.PI);
-        ctx.lineWidth = 2.5; ctx.strokeStyle = "#ee2d7a"; ctx.stroke();
-      }
-      ctx.beginPath(); ctx.arc(cx, cy, 6, 0, 2 * Math.PI);
-      ctx.fillStyle = "#f47230"; ctx.fill();
+    S.X.forEach(x => {
+      ctx.beginPath(); ctx.arc(tx(x[0]), ty(x[1]), 6, 0, 2 * Math.PI);
+      ctx.fillStyle = "#e8692c"; ctx.fill();
       ctx.lineWidth = 2; ctx.strokeStyle = "#ffffff"; ctx.stroke();
     });
-    // global best
-    const gx = tx(S.gb[0]), gy = ty(S.gb[1]);
-    ctx.beginPath(); ctx.arc(gx, gy, 8, 0, 2 * Math.PI);
-    ctx.lineWidth = 3; ctx.strokeStyle = "#ffffff"; ctx.stroke();
-    ctx.lineWidth = 2; ctx.strokeStyle = "#191919"; ctx.stroke();
-    ctx.beginPath(); ctx.arc(gx, gy, 4, 0, 2 * Math.PI); ctx.fillStyle = "#191919"; ctx.fill();
-    // iteration label
-    ctx.font = "600 15px Inter, sans-serif"; ctx.textAlign = "left"; ctx.textBaseline = "top";
-    const label = `${S.fname} · ${S.alg} · iteration ${S.t}/${P.T}`;
-    ctx.fillStyle = "rgba(255,255,255,0.85)"; ctx.fillRect(10, 10, ctx.measureText(label).width + 16, 26);
-    ctx.fillStyle = "#191919"; ctx.fillText(label, 18, 15);
+    // optimum
+    ctx.font = "30px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.lineWidth = 3; ctx.strokeStyle = "#ffffff"; ctx.strokeText("★", tx(fn.opt[0]), ty(fn.opt[1]));
+    ctx.fillStyle = "#191919"; ctx.fillText("★", tx(fn.opt[0]), ty(fn.opt[1]));
   }
 
   window.QSDemo = { F, P, init, step, draw };
